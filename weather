@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Exit if something breaks
+set -e
+
+# File name 
+FILE="forecast_$(date +%Y%m%d_%H%M%S).txt"
+
+# API URL
+URL="https://api.weather.gov/gridpoints/IWX/69,39/forecast"
+
+# Debug (optional)
+echo "Saving to: $FILE"
+
+# Curl + jq (FIXED)
+curl -s "$URL" | jq -r '
+.properties.periods[] |
+"\(.startTime) | \(.temperature)F | \(.detailedForecast)"
+' > "$FILE"
